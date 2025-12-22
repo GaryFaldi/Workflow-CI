@@ -2,15 +2,11 @@ import pandas as pd
 import mlflow
 import mlflow.sklearn
 import os
-import dagshub
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 dagshub_url = "https://dagshub.com/GaryFaldi/Membangun_model.mlflow"
-
-dagshub.init(repo_owner='GaryFaldi', repo_name='Membangun_model', mlflow=True)
-
 mlflow.set_tracking_uri(dagshub_url)
 mlflow.set_experiment("Airline Passenger Satisfaction - CI")
 
