@@ -1,0 +1,12 @@
+name: airline_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - mlflow
+      - pandas
+      - scikit-learn
+      - dagshub
