@@ -8,28 +8,23 @@ jobs:
   train-and-dockerize:
     runs-on: ubuntu-latest
     steps:
-      # 1-2. Set up job & Checkout (Otomatis & Manual)
       - name: Run actions/checkout@v3
         uses: actions/checkout@v3
 
-      # 3. Setup Python
       - name: Set up Python 3.12.7
         uses: actions/setup-python@v4
         with:
           python-version: '3.12.7'
 
-      # 4. Check Env (Menambah jumlah step)
       - name: Check Env
         run: |
           python --version
           pip --version
 
-      # 5. Install dependencies
       - name: Install dependencies
         run: |
           pip install mlflow pandas scikit-learn dagshub gdown
 
-      # 6. Run mlflow project (Sesuai kriteria modul)
       - name: Run mlflow project
         env:
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
@@ -39,25 +34,21 @@ jobs:
           cd MLProject
           python modelling.py
 
-      # 7. Get latest MLflow run_id (Untuk keperluan tagging/log)
       - name: Get latest MLflow run_id
         run: |
           echo "Fetching latest run info..."
           # Step ini biasanya digunakan jika Anda ingin mengambil ID spesifik
 
-      # 8. Install Python dependencies (Tambahan untuk penyesuaian modul)
       - name: Install Python dependencies
         run: |
           pip install docker
 
-      # 9. Upload to GitHub (Kriteria SKILLED: Menyimpan artefak)
       - name: Upload to GitHub
         uses: actions/upload-artifact@v4
         with:
           name: model-artifact
-          path: MLProject/  # Sesuaikan dengan lokasi output model Anda
+          path: MLProject/
 
-      # 10. Build Docker Model (Kriteria ADVANCE: mlflow build-docker)
       - name: Build Docker Model
         env:
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
@@ -66,14 +57,12 @@ jobs:
         run: |
           mlflow models build-docker -m "models:/Airline-Satisfaction-Model/latest" -n "${{ secrets.DOCKER_HUB_USERNAME }}/airline-model:latest" --env-manager=local
 
-      # 11. Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # 12. Tag Docker Image
       - name: Tag Docker Image
         run: |
           docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/airline-model:latest ${{ secrets.DOCKER_HUB_USERNAME }}/airline-model:v1
