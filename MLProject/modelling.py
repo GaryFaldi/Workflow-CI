@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 mlflow.autolog()
 
-with mlflow.start_run() as run:
+with mlflow.start_run(nested=True) as run:
     model = RandomForestClassifier(random_state=42)
     model.fit(X_train, y_train)
 
@@ -43,7 +43,5 @@ with mlflow.start_run() as run:
     os.makedirs("outputs", exist_ok=True)
     with open("outputs/run_id.txt", "w") as f:
         f.write(run.info.run_id)
-        
-    mlflow.sklearn.save_model(model, "outputs/model_file")
 
 print("Training selesai dan model telah diregistrasi.")

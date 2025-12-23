@@ -36,7 +36,6 @@ jobs:
       - name: Get latest MLflow run_id
         run: |
           echo "Fetching latest run info..."
-          # Step ini biasanya digunakan jika Anda ingin mengambil ID spesifik
 
       - name: Install Python dependencies
         run: |
